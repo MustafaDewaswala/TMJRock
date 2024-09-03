@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>AJAX Examples</title>
+<style>
+.xyz
+{
+width: 100%;
+height: 100%;
+top: 0;
+left: 0;
+border: 1px solid red;
+background: gray;
+position: fixed;
+opacity: 70%;
+}
+.pqr
+{
+width: 400px;
+min-width: 400px;
+height: 300px;
+min-height: 300px;
+top: 0;
+left: 0;
+bottom: 0;
+right: 0;
+margin: auto;
+border: 2px solid white;
+background-color: blue;
+position: fixed;
+overflow: auto;
+}
+.lmn
+{
+float: right;
+padding: 2px 7px;
+cursor: pointer;
+}
+</style>
+<script>
+function showIt()
+{
+var d=document.createElement("div");
+d.classList.add("xyz");
+document.body.appendChild(d);
+var p=document.createElement("div");
+p.classList.add("pqr");
+document.body.appendChild(p);
+var s=document.createElement("span");
+s.classList.add("lmn");
+var t=document.createTextNode("X");
+s.appendChild(t);
+p.appendChild(s);
+}
+
+function Modal(cid)
+{
+
+}
+
+
+function createModal1()
+{
+var modal=new Modal("ab");
+modal.show();
+modal.onOpen=function(){
+alert('Modal opened');
+};
+modal.onClose=function(){
+alert('Modal closed');
+};
+}
+function createModal2()
+{
+var modal=new Modal("pq");
+modal.show();
+modal.onOpen=function(){
+alert('Modal opened');
+};
+modal.onClose=function(){
+alert('Modal closed');
+};
+}
+</script>
+</head>
+<body>
+<button onClick='createModal1()'>Show First Modal</button>
+<button onClick='createModal2()'>Show Second Modal</button>
+<div id='ab'>
+God is great.
+</div>
+<div id='pq'>
+Ujjain is the city of Gods.
+</div>
+</body>
+</html>

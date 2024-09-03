@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>AJAX Examples</title>
+<script>
+function doSomething()
+{
+let a=document.getElementById("positionA");
+let b=document.getElementById("tb");
+b.remove();
+a.appendChild(b);
+}
+function putItRightBack()
+{
+let a=document.getElementById("tbdv");
+let b=document.getElementById("tb");
+b.remove();
+a.appendChild(b);
+}
+</script>
+</head>
+<body>
+<button type="button" onclick="doSomething()">Change position</button>
+<button type="button" onclick="putItRightBack()">Put it back</button>
+<div>
+<h1></h1>
+<span id='positionA'></span>
+<br>
+God is great<br>
+Ujjain is the city of GODS<br><br>
+<div id='tbdv'>
+<table id="tb" border="1"><tr><td>God is</td><td>Great</td></tr></table>
+</div>
+</div>
+</body>
+</html>

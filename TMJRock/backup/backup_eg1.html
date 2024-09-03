@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>AJAX Examples</title>
+<script>
+// TMJRock JavaScript Library starts
+var $$$={
+ajax:function(a)
+{
+var xmlHttpRequest=new XMLHttpRequest();
+xmlHttpRequest.onreadystatechange=function(){
+if(this.readyState==4){
+if(this.status==200){
+var responseData=this.responseText;
+a.success(responseData);
+}
+else{
+a.failure();
+}
+}
+};
+xmlHttpRequest.open(a.methodType,a.url,true);
+xmlHttpRequest.send();
+}
+};
+
+// TMJRock JavaScript Library ends
+
+function populateDesignations(){
+$$$.ajax({
+url: "servletOne",
+methodType: "GET",
+success: function(responseData){
+var designations=JSON.parse(responseData);
+var designationsComboBox=document.getElementById("designationCode");
+var obj;
+for(var i=0;i<designations.length;i+=1)
+{
+obj=document.createElement("option");
+obj.value=designations[i].code;
+obj.text=designations[i].title;
+designationsComboBox.appendChild(obj);
+}
+},
+failure: function(){
+alert('some problem');
+}
+});
+}
+window.addEventListener('load', populateDesignations);
+</script>
+</head>
+<body>
+<h1>GET type request example</h1>
+<select id='designationCode'>
+</select>
+<br><br>
+<a href='index.html'>Home</a>
+</body>
+</html>

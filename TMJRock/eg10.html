@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>AJAX Examples</title>
+<style>
+.modalMask
+{
+width: 100%;
+height: 100%;
+top: 0;
+left: 0;
+border: 1px solid red;
+background: gray;
+position: fixed;
+opacity: 70%;
+}
+.modal
+{
+width: 400px;
+min-width: 400px;
+height: 300px;
+min-height: 300px;
+top: 0;
+left: 0;
+bottom: 0;
+right: 0;
+margin: auto;
+border: 2px solid white;
+background-color: blue;
+position: fixed;
+}
+.closeButton
+{
+float: right;
+padding: 2px 7px;
+cursor: pointer;
+margin-right: 5px;
+font-size: 14pt;
+}
+</style>
+<script>
+var ds={
+"modals":[]
+};
+var $$$={
+"modals":{}
+};
+$$$.modals.show=function(mid)
+{
+var modal=null;
+for(var i=0;i<ds.modals.length;i++)
+{
+if(ds.modals[i].getContentId()==mid)
+{
+modal=ds.modals[i];
+break;
+}
+}
+if(modal!=null) modal.show();
+};
+
+// following is a class
+function Modal(cref)
+{
+var objectAddress=this; 
+this.beforeOpening=null;
+this.afterOpening=null;
+this.beforeClosing=null;
+this.afterClosing=null;
+var contentReference=cref;
+this.getContentId=function(){
+return contentReference.id;
+};
+var contentParentReference=contentReference.parentElement;
+var contentIndex=0;
+while(contentIndex<contentParentReference.children.length)
+{
+if(contentReference==contentParentReference.children[contentIndex])
+{
+break;
+}
+contentIndex++;
+}
+var modalMaskDivision=document.createElement("div");
+modalMaskDivision.style.display="none";
+modalMaskDivision.classList.add("modalMask");
+var modalDivision=document.createElement("div");
+modalDivision.style.display="none";
+modalDivision.classList.add("modal");
+document.body.appendChild(modalMaskDivision);
+document.body.appendChild(modalDivision);
+
+var headerDivision=document.createElement("div");
+headerDivision.style.background="yellow";
+headerDivision.style.width="97.5%";
+headerDivision.style.height="40px";
+headerDivision.style.padding="5px";
+modalDivision.appendChild(headerDivision);
+
+if(contentReference.hasAttribute("size"))
+{
+var sz=contentReference.getAttribute("size");
+let xpos=sz.indexOf("x");
+if(xpos==-1) xpos=sz.indexOf("X");
+if(xpos==-1 || xpos==0 || xpos==sz.length-1) throw "In case of modal, size should be specified as widthXheight ";
+let width=sz.substring(0,xpos);
+let height=sz.substring(xpos+1);
+modalDivision.style.width=width+"px";
+modalDivision.style.height=height+"px";
+}
+else
+{
+modalDivision.style.width="300px";
+modalDivision.style.height="300px";
+}
+if(contentReference.hasAttribute("header"))
+{
+var hd=contentReference.getAttribute("header");
+headerDivision.innerHTML=hd;
+}
+
+if(contentReference.hasAttribute("maskColor"))
+{
+var mkc=contentReference.getAttribute("maskColor");
+modalMaskDivision.style.background=mkc;
+}
+if(contentReference.hasAttribute("modalBackgroundColor"))
+{
+var mbc=contentReference.getAttribute("modalBackgroundColor");
+modalDivision.style.background=mbc;
+}
+
+var contentDivision=document.createElement("div");
+//contentDivision.style.border="1px solid black";
+contentDivision.style.height=(modalDivision.style.height.substring(0,modalDivision.style.height.length-2)-129)+"px";
+contentDivision.style.width="97%";
+contentDivision.style.overflow="auto";
+contentDivision.style.padding="5px";
+contentReference.remove();
+contentDivision.appendChild(contentReference);
+contentReference.style.display='block';
+contentReference.style.visibility='visible';
+modalDivision.appendChild(contentDivision);
+
+var footerDivision=document.createElement("div");
+footerDivision.style.background="pink";
+footerDivision.style.width="97.5%";
+footerDivision.style.height="40px";
+footerDivision.style.position="absolute";
+footerDivision.style.bottom=0;
+footerDivision.style.padding="5px";
+modalDivision.appendChild(footerDivision);
+
+if(contentReference.hasAttribute("footer"))
+{
+var ft=contentReference.getAttribute("footer");
+footerDivision.innerHTML=ft;
+}
+var closeButtonSpan=null;
+if(contentReference.hasAttribute("closeButton"))
+{
+var cb=contentReference.getAttribute("closeButton");
+if(cb.toUpperCase()=="TRUE")
+{
+closeButtonSpan=document.createElement("span");
+closeButtonSpan.classList.add("closeButton");
+var closeButtonMarker=document.createTextNode("X");
+closeButtonSpan.appendChild(closeButtonMarker);
+headerDivision.appendChild(closeButtonSpan);
+}
+}
+if(contentReference.hasAttribute("beforeOpening"))
+{
+var bo=contentReference.getAttribute("beforeOpening");
+this.beforeOpening=bo;
+}
+if(contentReference.hasAttribute("afterOpening"))
+{
+var ao=contentReference.getAttribute("afterOpening");
+this.afterOpening=ao;
+}
+if(contentReference.hasAttribute("beforeClosing"))
+{
+var bc=contentReference.getAttribute("beforeClosing");
+this.beforeClosing=bc;
+}
+if(contentReference.hasAttribute("afterClosing"))
+{
+var ac=contentReference.getAttribute("afterClosing");
+this.afterClosing=ac;
+}
+
+this.show=function(){
+if(eval(objectAddress.beforeOpening))
+{
+modalMaskDivision.style.display="block";
+modalDivision.style.display="block";
+if(objectAddress.afterOpening) setTimeout(function(){eval(objectAddress.afterOpening);},100);
+}
+};
+
+if(closeButtonSpan!=null)
+{
+closeButtonSpan.onclick=function(){
+if(eval(objectAddress.beforeClosing))
+{
+modalMaskDivision.style.display="none";
+modalDivision.style.display="none";
+if(objectAddress.afterClosing) setTimeout(function(){eval(objectAddress.afterClosing);},100);
+}
+};
+}
+
+}
+
+function abBeforeOpened()
+{
+//alert('Modal with ab is about to be opened');
+return true;
+}
+function abOpened()
+{
+//alert('Modal with ab opened');
+}
+function abBeforeClosed()
+{
+//alert('Modal with ab is about to be closed');
+return true;
+}
+function abClosed()
+{
+//alert('Modal with ab closed');
+}
+function createModal1()
+{
+$$$.modals.show("ab");
+}
+
+function loader()
+{
+var all=document.getElementsByTagName("*");
+var x;
+for(x=0;x<all.length;x++)
+{
+if(all[x].hasAttribute("forModal"))
+{
+if(all[x].getAttribute("forModal").toUpperCase()=="TRUE")
+{
+all[x].setAttribute("forModal","false");
+ds.modals[ds.modals.length]=new Modal(all[x]);
+x--;
+}
+}
+}
+}
+
+window.addEventListener('load',loader);
+
+/*
+Make changes to the Modal class
+1) the close function should not put back the section in its original place
+2) Hence I think no need for parent reference and content index
+3) Add feature so that the following is possible
+
+var modal=new Modal({
+"contentId": "ab",
+"header": "Some heading",
+"footer": "Some footer",
+"size": "200x300",
+"closeButton": false,
+"maskColor": "#3355ff",
+"modalBackgroundColor": "#549933"
+});
+*/
+
+</script>
+</head>
+<body>
+<button onClick='createModal1()'>Show First Modal</button>
+<div id='ab' forModal='true' header="Some heading" footer="Some footer" size="200x300" closeButton="true" maskColor="#3355ff" modalBackgroundColor="#549933" beforeOpening="abBeforeOpened()" afterOpening="abOpened()" beforeClosing="abBeforeClosed()" afterClosing="abClosed()">
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+God is great<br>
+LAST LINE
+</div>
+</body>
+</html>

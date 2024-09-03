@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>AJAX Examples</title>
+<script>
+// TMJRock Programmer Code
+
+
+// TMJRock User Code
+function DataModel()
+{
+this.data=null;
+this.getRowCount=function()
+{
+if(this.data==null) return 0;
+else return this.data.length;
+}
+// many more function
+}
+
+
+var myDataModel=new DataModel();
+
+function whatever()
+{
+//var employees=[{},{},{}];
+myDataModel.data=employees;
+// code to populate myDataModel with data (list of objects)
+}
+function doSomething()
+{
+$$$.grid("someId",{
+"model": myDataModel,
+"pagination": true,
+"pageSize" :10,
+"rowSelectionEnabled": true
+})
+}
+$$$.onDocumentLoaded(doSomething);
+</script>
+</head>
+<body>
+<div id='someId'>
+</div>
+</button>
+</body>
+</html>

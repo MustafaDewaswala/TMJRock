@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>AJAX Examples</title>
+<script>
+function saveEnquiry()
+{
+var firstName=document.getElementById('firstName').value;
+var lastName=document.getElementById('lastName').value;
+var age=document.getElementById('age').value;
+var customer={
+"firstName" : firstName,
+"lastName" : lastName,
+"age" : age
+};
+
+var whatever=document.getElementById("whatever");
+whatever.innerHTML="";
+var xmlHttpRequest=new XMLHttpRequest();
+xmlHttpRequest.onreadystatechange=function(){
+if(this.readyState==4)
+{
+if(this.status==200)
+{
+var customer=JSON.parse(this.responseText);
+var a="First Name : "+customer.firstName+"<br>";
+a=a+"Last Name : "+customer.lastName+"<br>";
+a=a+"Age : "+customer.age+"<br>";
+whatever.innerHTML=a;
+}
+else
+{
+alert('some problem');
+}
+}
+};
+xmlHttpRequest.open('POST','servletThree',true);
+xmlHttpRequest.setRequestHeader("Content-Type","application/json");
+xmlHttpRequest.send(JSON.stringify(customer));
+}
+</script>
+</head>
+<body>
+<h1>POST type request</h1>
+First name <input type='text' id='firstName'><br>
+Last name <input type='text' id='lastName'><br>
+Age <input type='text' id='age'><br>
+<button type='button' onclick='saveEnquiry()'>Save</button><br>
+<br>
+<div id='whatever'></div><br>
+<a href='index.html'>Home</a>
+</body>
+</html>
